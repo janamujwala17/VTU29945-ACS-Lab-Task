@@ -1,0 +1,71 @@
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int R = sc.nextInt();
+        int C = sc.nextInt();
+
+        int[][] grid = new int[R][C];
+        Queue<int[]> q = new LinkedList<>();
+
+        int trees = 0;
+
+        
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                grid[i][j] = sc.nextInt();
+
+                if (grid[i][j] == 1)
+                    trees++;
+
+                if (grid[i][j] == 2)
+                    q.add(new int[]{i, j});
+            }
+        }
+
+        int[][] dir = {
+            {-1, 0},  // up
+            {1, 0},   // down
+            {0, -1},  // left
+            {0, 1}    // right
+        };
+
+        int minutes = 0;
+
+        while (!q.isEmpty() && trees > 0) {
+
+            int size = q.size();
+
+            for (int i = 0; i < size; i++) {
+                int[] current = q.poll();
+
+                for (int[] d : dir) {
+                    int nr = current[0] + d[0];
+                    int nc = current[1] + d[1];
+
+                    if (nr >= 0 && nr < R &&
+                        nc >= 0 && nc < C &&
+                        grid[nr][nc] == 1) {
+
+                        grid[nr][nc] = 2;
+                        trees--;
+
+                        q.add(new int[]{nr, nc});
+                    }
+                }
+            }
+
+            minutes++;
+        }
+
+        if (trees > 0)
+            System.out.println("Minutes = -1");
+        else
+            System.out.println("Minutes = " + minutes);
+
+        sc.close();
+    }
+}
