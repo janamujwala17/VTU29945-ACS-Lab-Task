@@ -1,0 +1,82 @@
+import java.util.*;
+
+public class Main {
+
+    static class Node {
+        int value, list, index;
+
+        Node(int value, int list, int index) {
+            this.value = value;
+            this.list = list;
+            this.index = index;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int M = sc.nextInt();
+        int K = sc.nextInt();
+
+        int[][] lists = new int[M][];
+
+        for (int i = 0; i < M; i++) {
+            int n = sc.nextInt();
+            lists[i] = new int[n];
+
+            for (int j = 0; j < n; j++)
+                lists[i][j] = sc.nextInt();
+        }
+
+                PriorityQueue<Node> pq =
+            new PriorityQueue<>((a, b) -> a.value - b.value);
+
+        for (int i = 0; i < M; i++) {
+            if (lists[i].length > 0)
+                pq.add(new Node(lists[i][0], i, 0));
+        }
+
+        ArrayList<Integer> merged = new ArrayList<>();
+
+        while (!pq.isEmpty()) {
+            Node cur = pq.poll();
+            merged.add(cur.value);
+
+            int nextIndex = cur.index + 1;
+
+            if (nextIndex < lists[cur.list].length) {
+                pq.add(new Node(
+                    lists[cur.list][nextIndex],
+                    cur.list,
+                    nextIndex
+                ));
+            }
+        }
+
+                PriorityQueue<Integer> topK = new PriorityQueue<>();
+
+        for (int x : merged) {
+            topK.add(x);
+
+            if (topK.size() > K)
+                topK.poll();
+        }
+
+        ArrayList<Integer> result = new ArrayList<>();
+
+        while (!topK.isEmpty())
+            result.add(topK.poll());
+
+                System.out.println("Merged:");
+        for (int x : merged)
+            System.out.print(x + " ");
+
+        System.out.println("\n");
+
+                System.out.println("TopK:");
+        for (int i = result.size() - 1; i >= 0; i--)
+            System.out.print(result.get(i) + " ");
+
+        sc.close();
+    }
+}
